@@ -11,5 +11,15 @@ router.get('/', async (req, res, next) => {
     }
 });
 
+router.get('/:id', async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const place = await Place.getById(id);
+        return res.json({place})
+    } catch (e) {
+        return next(e);
+    }
+});
+
 module.exports = router;
 
