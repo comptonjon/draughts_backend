@@ -21,6 +21,16 @@ router.get('/:id', async (req, res, next) => {
     }
 });
 
+router.get('/:id/draughts', async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const drinks = await Place.getDraughts(id);
+        return res.json( { draughts: {place: +id, drinks }}); 
+    } catch (e) {
+        return next(e);
+    }
+})
+
 router.post('/', async (req, res, next) => {
     try {
         const place = await Place.create(req.body);

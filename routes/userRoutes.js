@@ -11,6 +11,16 @@ router.get('/', async (req, res, next) => {
     }
 });
 
+router.get('/:id/places_owned', async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const places_owned = await User.getOwnedPlaces(id);
+        return res.json({ user: +id, places_owned });
+    } catch (e) {
+        return next(e);
+    }
+});
+
 router.get('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;

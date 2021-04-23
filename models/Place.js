@@ -40,6 +40,11 @@ class Place {
         }
         return result.rows[0];
     }
+
+    static async getDraughts(id) {
+        const result = await db.query(`SELECT item_id AS id, active FROM draughts WHERE venue_id=$1`, [id]);
+        return result.rows;
+    }
     
     static async delete(id) {
         const result = await db.query(`DELETE FROM venues WHERE id=$1 RETURNING id`, [id]);

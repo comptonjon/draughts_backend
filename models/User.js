@@ -71,6 +71,11 @@ class User {
         return result.rows[0];
     }
 
+    static async getOwnedPlaces(id) {
+        const result = await db.query(`SELECT venue_id FROM venue_owners WHERE user_id=$1`, [id]);
+        return result.rows;
+    }
+
     static async delete(id) {
         const result = await db.query(`DELETE FROM users WHERE id=$1 RETURNING id`, [id]);
         if (!result.rows.length) {

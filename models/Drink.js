@@ -23,7 +23,7 @@ class Drink {
             id=$${Object.keys(data).length + 1}
             RETURNING *`, [...Object.values(data), id]
         );
-        
+
         if (!result.rows.length) {
             throw new ResourceNotFoundError();
         }
@@ -42,6 +42,11 @@ class Drink {
             throw new ResourceNotFoundError;
         }
         return result.rows[0];
+    }
+
+    static async getDraughts(id) {
+        const result = await db.query(`SELECT venue_id AS id FROM draughts WHERE item_id=$1 AND active=true`, [id]);
+        return result.rows;
     }
 
     static async delete(id) {
