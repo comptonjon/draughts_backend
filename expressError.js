@@ -13,7 +13,21 @@ class ResourceNotFoundError extends ExpressError {
     }
 }
 
+class RequestConflictError extends ExpressError {
+    constructor(message="Request confilcts with existing data") {
+        super(message, 409);
+    }
+}
+
+class AuthenticationError extends ExpressError {
+    constructor(message="username or password is incorrect") {
+        super(message, 400);
+    }
+}
+
 module.exports = { 
     ExpressError, 
-    ResourceNotFoundError 
+    ResourceNotFoundError,
+    RequestConflictError,
+    AuthenticationError 
 };
