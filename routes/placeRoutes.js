@@ -15,7 +15,7 @@ router.get('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
         const place = await Place.getById(id);
-        return res.json({place})
+        return res.json({ place })
     } catch (e) {
         return next(e);
     }
@@ -25,6 +25,16 @@ router.post('/', async (req, res, next) => {
     try {
         const place = await Place.create(req.body);
         return res.status(201).json({ place });
+    } catch (e) {
+        return next(e);
+    }
+});
+
+router.patch('/:id', async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const place = await Place.update(id, req.body);
+        return res.json({ place });
     } catch (e) {
         return next(e);
     }

@@ -28,7 +28,17 @@ router.post('/', async (req, res, next) => {
     } catch (e) {
         return next(e);
     }
-})
+});
+
+router.patch('/:id', async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const drink = await Drink.update(id, req.body);
+        return res.json({ drink });
+    } catch (e) {
+        return next(e);
+    }
+});
 
 router.delete('/:id', async (req, res, next) => {
     try {

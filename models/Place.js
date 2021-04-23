@@ -12,11 +12,27 @@ class Place {
         );
         return result.rows[0];
     }
-//     static async update
+
+    static async update(id, data) {
+        const result = await db.query(
+            `UPDATE items
+            SET
+            ${Object.keys(data).map((k, i) => `${k}=$${i + 1}`).join(",")}
+            WHERE
+            id=$${Object.keys(data).length + 1}
+            RETURNING *`, [...Object.values(data), id]
+        );
+        if (!result.rows.length) {
+            throw new ResourceNotFoundError();
+        }
+        return result.rows[0];
+    }
+
     static async get() {
         const result = await db.query(`SELECT name, address, city, state, zip, lat, lng, url, phone FROM venues`);
         return result.rows;
     }
+
     static async getById(id) {
         const result = await db.query(`SELECT name, address, city, state, zip, lat, lng, url, phone FROM venues WHERE id=$1`, [id]);
         if (!result.rows.length) {

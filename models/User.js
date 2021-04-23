@@ -44,7 +44,19 @@ class User {
         }
         throw new AuthenticationError();
     }
-//     static async update
+
+    static async update(id, data) {
+        const result = await db.query(
+            `UPDATE users
+            SET
+            ${Object.keys(data).map((k, i) => `${k}=$${i + 1}`).join(",")}
+            WHERE
+            id=$${Object.keys(data).length + 1}
+            RETURNING 
+            id, username, email, city, state, zip, is_owner`, [...Object.values(data), id]
+        );
+        return result.rows[0];
+    }
 
     static async get() {
         const result = await db.query(`SELECT id, username, email, city, state, zip, is_owner FROM users`);
