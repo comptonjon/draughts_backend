@@ -21,5 +21,24 @@ router.get('/:id', async (req, res, next) => {
     }
 });
 
+router.post('/', async (req, res, next) => {
+    try {
+        const place = await Place.create(req.body);
+        return res.status(201).json({ place });
+    } catch (e) {
+        return next(e);
+    }
+});
+
+router.delete('/:id', async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        await Place.delete(id);
+        return res.json({message: "deleted"});
+    } catch (e) {
+        return next(e);
+    }
+})
+
 module.exports = router;
 
