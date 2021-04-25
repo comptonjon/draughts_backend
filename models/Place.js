@@ -45,6 +45,22 @@ class Place {
         const result = await db.query(`SELECT item_id AS id, active FROM draughts WHERE venue_id=$1`, [id]);
         return result.rows;
     }
+
+    static async editDraughts(pid, did, active) {
+        console.log("data", pid, did, active)
+        const result = await db.query(`UPDATE draughts SET active=$1 WHERE item_id=$2 AND venue_id=$3 RETURNING *`, [active, did, pid]);
+        if (!result.rows.length) {
+            throw new ResourceNotFoundError();
+        }
+        return result.rows[0];
+    }
+
+    static async deleteDraught(pid, did) {
+        const result = await db.query(`DELETE FROM draughts WHERE item_id=$1 AND venue_id=$2 RETURNING item_id`, [did, pid]);
+        if (!result.rows.length) {
+            throw new ResourceNotFoundError();
+        }
+    }
     
     static async delete(id) {
         const result = await db.query(`DELETE FROM venues WHERE id=$1 RETURNING id`, [id]);

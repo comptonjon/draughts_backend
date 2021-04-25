@@ -29,7 +29,28 @@ router.get('/:id/draughts', async (req, res, next) => {
     } catch (e) {
         return next(e);
     }
-})
+});
+
+router.patch('/:pid/draughts/:did', async (req, res, next) => {
+    try {
+        const { pid, did } = req.params;
+        const { active } = req.query;
+        const draught = await Place.editDraughts(+pid, +did, active);
+        return res.json({draught});
+    } catch (e) {
+        return next(e);
+    }
+});
+
+router.delete('/:pid/draughts/:did', async (req, res, next) => {
+    try {
+        const {pid, did} = req.params;
+        await Place.deleteDraught(pid, did);
+        return res.json({message: "deleted"});
+    } catch (e) {
+        return next(e);
+    }
+});
 
 router.post('/', async (req, res, next) => {
     try {
