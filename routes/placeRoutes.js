@@ -5,7 +5,7 @@ const Place = require('../models/Place');
 router.get('/', async (req, res, next) => {
     try {
         const places = await Place.get();
-        return res.json({places});
+        return res.json({ places });
     } catch (e) {
         return next(e);
     }
@@ -25,7 +25,7 @@ router.get('/:id/draughts', async (req, res, next) => {
     try {
         const { id } = req.params;
         const drinks = await Place.getDraughts(id);
-        return res.json( { draughts: {place: +id, drinks }}); 
+        return res.json({ draughts: { place: +id, drinks }}); 
     } catch (e) {
         return next(e);
     }

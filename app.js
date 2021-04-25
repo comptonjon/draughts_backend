@@ -15,10 +15,10 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
-app.use('/auth', authRoutes);
-app.use('/user', userRoutes);
-app.use('/place', placeRoutes);
-app.use('/drink', drinkRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/place', placeRoutes);
+app.use('/api/drink', drinkRoutes);
 
 app.use((req, res, next) => {
     return next(new ExpressError("Resource not found", 404));

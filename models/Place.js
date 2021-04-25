@@ -29,12 +29,12 @@ class Place {
     }
 
     static async get() {
-        const result = await db.query(`SELECT name, address, city, state, zip, lat, lng, url, phone FROM venues`);
+        const result = await db.query(`SELECT id, name, address, city, state, zip, lat, lng, url, phone FROM venues`);
         return result.rows;
     }
 
     static async getById(id) {
-        const result = await db.query(`SELECT name, address, city, state, zip, lat, lng, url, phone FROM venues WHERE id=$1`, [id]);
+        const result = await db.query(`SELECT id, name, address, city, state, zip, lat, lng, url, phone FROM venues WHERE id=$1`, [id]);
         if (!result.rows.length) {
             throw new ResourceNotFoundError();
         }
