@@ -49,6 +49,21 @@ class Drink {
         return result.rows;
     }
 
+    static async searchDrinks(query) {
+        // SELECT * FROM items WHERE (name ILIKE '%an%' OR maker ILIKE '%an%') AND (name ILIKE '%le%' OR maker ILIKE '%le%')
+        let queryString = `SELECT * FROM items`;
+        let values = [];
+        if (query !== "") {
+            queryString += " WHERE "
+            const queryTokens = query.split(" ");
+            const variableString = queryTokens.map((t, i) => `(name ILIKE '%' || $${i + 1} || '%' OR maker ILIKE '%' || $${i + 1} || '%')`).join(" AND ");
+            queryString += variableString;
+            values = queryTokens;
+        }
+        const result = await db.query(queryString, values);
+        return result.rows;
+    }
+
     static async delete(id) {
         const result = await db.query(`DELETE FROM items WHERE id=$1 RETURNING id`, [id]);
         if (!result.rows.length) {

@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Drink = require('../models/Drink');
+const { searchUntappd } = require('../helpers/untappd');
+const db = require('../db');
 
 router.get('/', async (req, res, next) => {
     try {
@@ -10,6 +12,15 @@ router.get('/', async (req, res, next) => {
         return next(e);
     }
 });
+
+router.get('/search', async (req, res, next) => {
+    const { q } = req.query;
+    const db_results = await Drink.searchDrinks(q);
+    const untappd_results = await searchUntappd(q);
+    return res.json({db_results, untappd_results});
+});
+
+
 
 router.get('/:id', async (req, res, next) => {
     try {
@@ -30,6 +41,8 @@ router.get('/:id/draughts', async (req, res, next) => {
         return next(e);
     }
 });
+
+
 
 router.post('/', async (req, res, next) => {
     try {
