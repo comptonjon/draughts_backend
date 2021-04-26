@@ -1,5 +1,4 @@
 const db = require("../db");
-const Drink = require("./Drink");
 
 class DrinkRatings {
     static async getDrinkRatings() {
