@@ -64,7 +64,15 @@ class User {
     }
 
     static async getById(id) {
-        const result = await db.query(`SELECT id, username, email, city, state, zip, is_owner FROM users WHERE id=$1`, [id]);
+        const result = await db.query(
+            `SELECT id, username, email, city, state, zip, is_owner, DISTINCT COUNT(v.rating) AS vc, DISTINCT COUNT(i.rating) ic 
+            FROM users u
+            LEFT JOIN user_venue_ratings v
+            ON v.user_id=u.id
+            LEFT JOIN user_item_ratings i
+            ON i.user_id=u.id 
+            WHERE id=$1
+            GROUP BY u.id`, [id]);
         if (!result.rows.length) {
             throw new ResourceNotFoundError();
         }

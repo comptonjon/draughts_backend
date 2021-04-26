@@ -6,6 +6,7 @@ const userRoutes = require('./routes/userRoutes');
 const placeRoutes = require('./routes/placeRoutes');
 const drinkRoutes = require('./routes/drinkRoutes');
 const authRoutes = require('./routes/authRoutes');
+const ratingRoutes = require('./routes/ratingRoutes');
 const { ExpressError } = require('./expressError');
 
 const app = express();
@@ -19,6 +20,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/place', placeRoutes);
 app.use('/api/drink', drinkRoutes);
+app.use('/api/rating', ratingRoutes);
 
 app.use((req, res, next) => {
     return next(new ExpressError("Resource not found", 404));
