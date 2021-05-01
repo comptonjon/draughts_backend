@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Place = require('../models/Place');
+const { checkForAuthenticatedUser } = require('../middleware/auth');
 
 router.get('/', async (req, res, next) => {
     try {

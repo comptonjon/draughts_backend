@@ -4,7 +4,7 @@ const { ResourceNotFoundError } = require('../expressError');
 class Place {
     static async create(data) {
         const result = await db.query(
-            `INSERT INTO venues 
+            `INSERT INTO places 
             (${Object.keys(data).join(',')}) 
             VALUES 
             (${Object.values(data).map((v,i) => `$${i + 1}`).join(",")})
@@ -15,7 +15,7 @@ class Place {
 
     static async update(id, data) {
         const result = await db.query(
-            `UPDATE items
+            `UPDATE places
             SET
             ${Object.keys(data).map((k, i) => `${k}=$${i + 1}`).join(",")}
             WHERE
@@ -29,12 +29,12 @@ class Place {
     }
 
     static async get() {
-        const result = await db.query(`SELECT id, name, address, city, state, zip, lat, lng, url, phone FROM venues`);
+        const result = await db.query(`SELECT id, name, address, city, state, zip, lat, lng, url, phone FROM places`);
         return result.rows;
     }
 
     static async getById(id) {
-        const result = await db.query(`SELECT id, name, address, city, state, zip, lat, lng, url, phone FROM venues WHERE id=$1`, [id]);
+        const result = await db.query(`SELECT id, name, address, city, state, zip, lat, lng, url, phone FROM places WHERE id=$1`, [id]);
         if (!result.rows.length) {
             throw new ResourceNotFoundError();
         }
@@ -42,13 +42,13 @@ class Place {
     }
 
     static async getDraughts(id) {
-        const result = await db.query(`SELECT item_id AS id, active FROM draughts WHERE venue_id=$1`, [id]);
+        const result = await db.query(`SELECT drink_id AS id, active FROM draughts WHERE place_id=$1`, [id]);
         return result.rows;
     }
 
     static async editDraughts(pid, did, active) {
         console.log("data", pid, did, active)
-        const result = await db.query(`UPDATE draughts SET active=$1 WHERE item_id=$2 AND venue_id=$3 RETURNING *`, [active, did, pid]);
+        const result = await db.query(`UPDATE draughts SET active=$1 WHERE drink_id=$2 AND place_id=$3 RETURNING *`, [active, did, pid]);
         if (!result.rows.length) {
             throw new ResourceNotFoundError();
         }
@@ -56,14 +56,14 @@ class Place {
     }
 
     static async deleteDraught(pid, did) {
-        const result = await db.query(`DELETE FROM draughts WHERE item_id=$1 AND venue_id=$2 RETURNING item_id`, [did, pid]);
+        const result = await db.query(`DELETE FROM draughts WHERE drink_id=$1 AND place_id=$2 RETURNING drink_id`, [did, pid]);
         if (!result.rows.length) {
             throw new ResourceNotFoundError();
         }
     }
     
     static async delete(id) {
-        const result = await db.query(`DELETE FROM venues WHERE id=$1 RETURNING id`, [id]);
+        const result = await db.query(`DELETE FROM places WHERE id=$1 RETURNING id`, [id]);
         if (!result.rows.length) {
             throw new ResourceNotFoundError();
         }

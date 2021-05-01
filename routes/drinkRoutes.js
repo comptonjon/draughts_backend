@@ -2,7 +2,11 @@ const express = require('express');
 const router = express.Router();
 const Drink = require('../models/Drink');
 const { searchUntappd } = require('../helpers/untappd');
+const jsonschema = require('jsonschema');
+const drinkCreateSchema = require('../schemata/drinkCreateSchema.json');
+const drinkUpdateSchema = require('../schemata/drinkUpdateSchema.json');
 const db = require('../db');
+const ExpressError = require('../expressError');
 
 router.get('/', async (req, res, next) => {
     try {
@@ -46,8 +50,12 @@ router.get('/:id/draughts', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
     try {
-        const drink = await Drink.create(req.body);
-        return res.status(201).json({drink});
+        const schemaCheck = jsonschema.validate(req.body, drinkCreateSchema);
+        if (schemaCheck.valid) {
+            const drink = await Drink.create(req.body);
+            return res.status(201).json({drink});
+        }
+        return next(new ExpressError(schemaCheck.errors.map(error => error.stack), 400));
     } catch (e) {
         return next(e);
     }
@@ -56,8 +64,12 @@ router.post('/', async (req, res, next) => {
 router.patch('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
-        const drink = await Drink.update(id, req.body);
-        return res.json({ drink });
+        const schemaCheck = jsonschema.validate(req.body, drinkUpdateSchema);
+        if (schemaCheck.valid) {
+            const drink = await Drink.update(id, req.body);
+            return res.json({ drink });
+        }
+        return next(new ExpressError(schemaCheck.errors.map(error => error.stack), 400));
     } catch (e) {
         return next(e);
     }

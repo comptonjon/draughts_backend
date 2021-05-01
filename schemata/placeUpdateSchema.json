@@ -1,0 +1,100 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "name": "Joe's Bar and Grill",
+            "address": "1234 Main St.",
+            "city": "Anytown",
+            "state": "NY",
+            "zip": "45678",
+            "url": "http://www.joesbandg.com",
+            "phone": "212-555-5353"
+        }
+    ],
+    "required": [],
+    "properties": {
+        "name": {
+            "$id": "#/properties/name",
+            "type": "string",
+            "title": "The name schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "Joe's Bar and Grill"
+            ],
+            "maxLength" : 40
+        },
+        "address": {
+            "$id": "#/properties/address",
+            "type": "string",
+            "title": "The address schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "1234 Main St."
+            ],
+            "maxLength" : 50
+        },
+        "city": {
+            "$id": "#/properties/city",
+            "type": "string",
+            "title": "The city schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "Anytown"
+            ],
+            "maxLength" : 20
+        },
+        "state": {
+            "$id": "#/properties/state",
+            "type": "string",
+            "title": "The state schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "NY"
+            ],
+            "minLength" : 2,
+            "maxLength" : 2
+        },
+        "zip": {
+            "$id": "#/properties/zip",
+            "type": "string",
+            "title": "The zip schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "45678"
+            ],
+            "minLength" : 5,
+            "maxLength" : 5
+        },
+        "url": {
+            "$id": "#/properties/url",
+            "type": "string",
+            "title": "The url schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "http://www.joesbandg.com"
+            ]
+        },
+        "phone": {
+            "$id": "#/properties/phone",
+            "type": "string",
+            "title": "The phone schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "212-555-5353"
+            ]
+        }
+    },
+    "additionalProperties": false
+}

@@ -5,7 +5,7 @@ class Drink {
 
     static async create(data) {
         const result = await db.query(
-            `INSERT INTO items 
+            `INSERT INTO drinks 
             (${Object.keys(data).join(',')}) 
             VALUES 
             (${Object.values(data).map((v,i) => `$${i + 1}`).join(",")})
@@ -16,7 +16,7 @@ class Drink {
 
     static async update(id, data) {
         const result = await db.query(
-            `UPDATE items
+            `UPDATE drinks
             SET
             ${Object.keys(data).map((k, i) => `${k}=$${i + 1}`).join(",")}
             WHERE
@@ -32,12 +32,12 @@ class Drink {
     }
 
     static async get() {
-        const result = await db.query(`SELECT id, name, maker, abv, description, untappd_id, untappd_rating, img_url FROM items`);
+        const result = await db.query(`SELECT id, name, maker, abv, description, untappd_id, untappd_rating, img_url FROM drinks`);
         return result.rows;
     }
 
     static async getById(id) {
-        const result = await db.query(`SELECT id, name, maker, abv, description, untappd_id, untappd_rating, img_url FROM items WHERE id=$1`, [id]);
+        const result = await db.query(`SELECT id, name, maker, abv, description, untappd_id, untappd_rating, img_url FROM drinks WHERE id=$1`, [id]);
         if (!result.rows.length) {
             throw new ResourceNotFoundError;
         }
@@ -45,13 +45,13 @@ class Drink {
     }
 
     static async getDraughts(id) {
-        const result = await db.query(`SELECT venue_id AS id FROM draughts WHERE item_id=$1 AND active=true`, [id]);
+        const result = await db.query(`SELECT place_id AS id FROM draughts WHERE drink_id=$1 AND active=true`, [id]);
         return result.rows;
     }
 
     static async searchDrinks(query) {
         // SELECT * FROM items WHERE (name ILIKE '%an%' OR maker ILIKE '%an%') AND (name ILIKE '%le%' OR maker ILIKE '%le%')
-        let queryString = `SELECT * FROM items`;
+        let queryString = `SELECT * FROM drinks`;
         let values = [];
         if (query !== "") {
             queryString += " WHERE "
@@ -65,7 +65,7 @@ class Drink {
     }
 
     static async delete(id) {
-        const result = await db.query(`DELETE FROM items WHERE id=$1 RETURNING id`, [id]);
+        const result = await db.query(`DELETE FROM drinks WHERE id=$1 RETURNING id`, [id]);
         if (!result.rows.length) {
             throw new ResourceNotFoundError();
         }

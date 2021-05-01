@@ -1,0 +1,107 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "username": "jcompton",
+            "password": "dkifgl98.93kenf8wIDKF98elkwhhf8f.dkfowekt484krnfo",
+            "city": "Seattle",
+            "state": "WA",
+            "zip": "98115",
+            "email": "jcompton@gmail.com",
+            "is_owner": true
+        }
+    ],
+    "required": [
+        "username",
+        "password",
+        "city",
+        "state",
+        "zip",
+        "email",
+        "is_owner"
+    ],
+    "properties": {
+        "username": {
+            "$id": "#/properties/username",
+            "type": "string",
+            "title": "The username schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "minLength" : 3,
+            "maxLength" : 30,
+            "examples": [
+                "jcompton"
+            ]
+        },
+        "password": {
+            "$id": "#/properties/password",
+            "type": "string",
+            "title": "The password schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "minLength" : 8,
+            "examples": [
+                "dkifgl98.93kenf8wIDKF98elkwhhf8f.dkfowekt484krnfo"
+            ]
+        },
+        "city": {
+            "$id": "#/properties/city",
+            "type": "string",
+            "title": "The city schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "Seattle"
+            ]
+        },
+        "state": {
+            "$id": "#/properties/state",
+            "type": "string",
+            "title": "The state schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "minLength" : 2,
+            "maxLength" : 2,
+            "examples": [
+                "WA"
+            ]
+        },
+        "zip": {
+            "$id": "#/properties/zip",
+            "type": "string",
+            "title": "The zip schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": 0,
+            "examples": [
+                "98115"
+            ]
+        },
+        "email": {
+            "$id": "#/properties/email",
+            "type": "string",
+            "title": "The email schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "format" : "email",
+            "examples": [
+                "jcompton@gmail.com"
+            ]
+        },
+        "is_owner": {
+            "$id": "#/properties/is_owner",
+            "type": "boolean",
+            "title": "The is_owner schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": false,
+            "examples": [
+                true
+            ]
+        }
+    },
+    "additionalProperties": false
+}

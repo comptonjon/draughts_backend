@@ -12,10 +12,13 @@ CREATE TABLE users (
     state TEXT NOT NULL,
     zip VARCHAR(5) NOT NULL,
     email TEXT NOT NULL, 
-    is_owner BOOLEAN DEFAULT false
+    is_owner BOOLEAN DEFAULT false,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
 );
 
-CREATE TABLE venues (
+CREATE TABLE places (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     address TEXT NOT NULL,
@@ -25,10 +28,12 @@ CREATE TABLE venues (
     lat FLOAT,
     lng FLOAT,
     url TEXT,
-    phone TEXT
+    phone TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE items (
+CREATE TABLE drinks (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     maker TEXT NOT NULL,
@@ -36,30 +41,40 @@ CREATE TABLE items (
     description TEXT,
     untappd_id INTEGER UNIQUE,
     untappd_rating FLOAT,
-    img_url TEXT
+    img_url TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE draughts (
-    venue_id INTEGER REFERENCES venues(id) ON DELETE CASCADE,
-    item_id INTEGER REFERENCES items(id) ON DELETE CASCADE,
-    active BOOLEAN DEFAULT true
+    place_id INTEGER REFERENCES places(id) ON DELETE CASCADE,
+    drink_id INTEGER REFERENCES drinks(id) ON DELETE CASCADE,
+    active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE venue_owners (
-    venue_id INTEGER REFERENCES venues(id) ON DELETE CASCADE,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
-);
-
-CREATE TABLE user_venue_ratings (
+CREATE TABLE place_owners (
+    place_id INTEGER REFERENCES places(id) ON DELETE CASCADE,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    venue_id INTEGER REFERENCES venues(id) ON DELETE CASCADE,
-    rating INTEGER NOT NULL
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE user_item_ratings (
+CREATE TABLE user_place_ratings (
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    item_id INTEGER REFERENCES items(id) ON DELETE CASCADE,
-    rating INTEGER NOT NULL 
+    place_id INTEGER REFERENCES places(id) ON DELETE CASCADE,
+    rating INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE user_drink_ratings (
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    drink_id INTEGER REFERENCES drinks(id) ON DELETE CASCADE,
+    rating INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
 );
 --  20 users
 INSERT INTO users
@@ -96,7 +111,7 @@ VALUES
 ('slong', '$2b$12$xBKW8/NIKnSMmZdEtLfgDu0LGvITJVqV1r400g/x5FrdjI1G/UO5a', 'shedlong@mariners.com', 'Seattle', 'WA', 98115, false),
 ('jmarmo', '$2b$12$xBKW8/NIKnSMmZdEtLfgDu0LGvITJVqV1r400g/x5FrdjI1G/UO5a', 'marmolade@mariners.com', 'Seattle', 'WA', 98105, false);
 -- 30 venues
-INSERT INTO venues
+INSERT INTO places
 (name, address, city, state, zip, lat, lng)
 VALUES
 ('Triangle Spirits', '3507 Fremont Pl N', 'Seattle', 'WA', '98103', 47.65085200000001, -122.3508604), 
@@ -130,7 +145,7 @@ VALUES
 ('Draught 55', '245 E 55th St', 'New York', 'NY', '10022', 40.7583639, -73.96652499999999), 
 ('Firestarter Bar & Grill', '21008 108th Ave SE', 'Kent', 'WA', '98031', 47.4138168, -122.1956906);
 -- -- 50 items
-INSERT INTO items 
+INSERT INTO drinks 
 (name, maker, abv, description, untappd_id, untappd_rating, img_url)
 VALUES
 ('Mannys Pale Ale', 'Georgetown Brewing Company', 5.4, 'Unfiltered NW Pale Ale', 6960, 3.60968, 'https://untappd.akamaized.net/site/beer_logos_hd/beer-6960_29055_hd.jpeg'),
@@ -146,10 +161,10 @@ VALUES
 ('Old Rasputin', 'North Coast Brewing Company', 9.0, 'Old Rasputin seems to develop a cult following wherever it goes. Rich, intense brew with big complex flavors and a warming finish.', 30855, 4.01199, 	'https://untappd.akamaized.net/site/beer_logos_hd/beer-30855_26e2c_hd.jpeg'),
 ('Stella Artois', 'Stella Artois', 5.0, 'Stella Artois was first brewed as a Christmas beer in Leuven. It was named Stella from the star of Christmas, and Artois after Sebastian Artois, founder of the brewery. It is brewed to perfection using the original Stella Artois yeast and the celebrated Saaz hops. It is the optimum premium lager, with its full flavour and clean crisp taste.', 4010, 3.56789, 'https://untappd.akamaized.net/site/beer_logos/beer-4010_5da67_sm.jpeg'),
 ('Corona Extra', 'Grupo Modelo', 4.6, 'Corona Extra Mexican Beer is a crisp, clean and well balanced cerveza with fruity-honey aromas and a touch of malt, making it a great tailgating beer, beach drink or barbecue refreshment.', 5848, 3.3212, 'https://untappd.akamaized.net/site/beer_logos/beer-5848_e34c0_sm.jpeg'),
-('Samuel Adams Boston Lager', 'Boston Beer Company', 3914, 'Samuel Adams Boston Lager® is the best example of the fundamental characteristics of a great beer, offering a full, rich flavor that is both balanced and complex. It is brewed using a decoration mash, a time consuming, traditional four vessel brewing process discarded by many contemporary brewers. This process brings forth a rich sweetness from the malt that makes it well worth the effort. Samuel Adams Boston Lager® also uses only the finest of ingredients including two row barley, as well as German Noble aroma hops. The exclusive use of two row barley not only imparts a full, smooth body but also gives the beer a wide spectrum of malt flavor ranging from slightly sweet to caramel to slightly roasted. The Noble hops varieties, Hallertau Mittelfruh and Tettnang Tettnanger, add a wide range of floral, piney and citrus notes, which are present from the aroma, through the flavor, to the lingering smooth finish. We take great pride in the Noble hops used in our beers. They are hand selected by Jim Koch and our other brewers from the worlds oldest hops growing area. Among the worlds most expensive, they cost twenty times as much as other hops.', 3914, 3.23, 'https://untappd.akamaized.net/site/beer_logos/beer-3914_487c1_sm.jpeg'),
-('Coors Light', 'Coors Brewing Company', 3834, 'Coors Light is Coors Brewing Companys largest-selling brand and the fourth best-selling beer in the U.S. Introduced in 1978, Coors Light has been a favorite in delivering the ultimate in cold refreshment for more than 25 years. The simple, silver-toned can caught peoples attention and the brew became nicknamed the Silver Bullet as sales climbed.', 3834, 3.05, 'https://untappd.akamaized.net/site/beer_logos/beer-3834_9e28f_sm.jpeg'),
-('Keystone Light', 'Coors Brewing Company', 5845, 'Keystone beer is a product of the Coors Brewing Company in Golden, Colorado. It was first introduced in Chico, California in September 1989. Keystone can be found in can, keg, and occasionally bottled form.', 5845, 2.55, 'https://untappd.akamaized.net/site/beer_logos/beer-5845_8053d_sm.jpeg'),
-('A Little Sumpin Sumpin Ale', '7.5', 25796, 'Way smooth and silky with a nice wheatly-esque-ish-ness. A truly unique style featuring a strong hop finish on a silky body. A hoppy pale wheat ale that is great for IPA fans but so smooth that the hefeweizen fans dig it too.', 25796, 4.1, 'https://untappd.akamaized.net/site/beer_logos/beer-25796_43b95_sm.jpeg'),
+('Samuel Adams Boston Lager', 'Boston Beer Company', 5.0, 'Samuel Adams Boston Lager® is the best example of the fundamental characteristics of a great beer, offering a full, rich flavor that is both balanced and complex. It is brewed using a decoration mash, a time consuming, traditional four vessel brewing process discarded by many contemporary brewers. This process brings forth a rich sweetness from the malt that makes it well worth the effort. Samuel Adams Boston Lager® also uses only the finest of ingredients including two row barley, as well as German Noble aroma hops. The exclusive use of two row barley not only imparts a full, smooth body but also gives the beer a wide spectrum of malt flavor ranging from slightly sweet to caramel to slightly roasted. The Noble hops varieties, Hallertau Mittelfruh and Tettnang Tettnanger, add a wide range of floral, piney and citrus notes, which are present from the aroma, through the flavor, to the lingering smooth finish. We take great pride in the Noble hops used in our beers. They are hand selected by Jim Koch and our other brewers from the worlds oldest hops growing area. Among the worlds most expensive, they cost twenty times as much as other hops.', 3914, 3.23, 'https://untappd.akamaized.net/site/beer_logos/beer-3914_487c1_sm.jpeg'),
+('Coors Light', 'Coors Brewing Company', 4.1, 'Coors Light is Coors Brewing Companys largest-selling brand and the fourth best-selling beer in the U.S. Introduced in 1978, Coors Light has been a favorite in delivering the ultimate in cold refreshment for more than 25 years. The simple, silver-toned can caught peoples attention and the brew became nicknamed the Silver Bullet as sales climbed.', 3834, 3.05, 'https://untappd.akamaized.net/site/beer_logos/beer-3834_9e28f_sm.jpeg'),
+('Keystone Light', 'Coors Brewing Company', 4.0, 'Keystone beer is a product of the Coors Brewing Company in Golden, Colorado. It was first introduced in Chico, California in September 1989. Keystone can be found in can, keg, and occasionally bottled form.', 5845, 2.55, 'https://untappd.akamaized.net/site/beer_logos/beer-5845_8053d_sm.jpeg'),
+('A Little Sumpin Sumpin Ale', 'Lagunitas Brewing Company', 7.5, 'Way smooth and silky with a nice wheatly-esque-ish-ness. A truly unique style featuring a strong hop finish on a silky body. A hoppy pale wheat ale that is great for IPA fans but so smooth that the hefeweizen fans dig it too.', 25796, 4.1, 'https://untappd.akamaized.net/site/beer_logos/beer-25796_43b95_sm.jpeg'),
 ('Smithwicks', 'Guinness', 4.5, 'Smithwicks is a clear beer with a rich ruby color and creamy head. Clean and delicate aroma with different individual notes: from the top fermentation by the Smithwick yeast come aromatic esters creating a fruity aroma. The Aroma Hops added late in the boil contribute clean fresh floral notes.', 13388, 3.89, 'https://untappd.akamaized.net/site/beer_logos/beer-13388_02315_sm.jpeg'),
 ('Sculpin', 'Ballast Point Brewing Company', 7.0, 'The Sculpin IPA is a testament to our humble beginnings as Home Brew Mart. Founded in 1992, the Mart continues to be a catalyst for the San Diego brewing scene, setting the trend for handcrafted ales. Inspired by our customers, employees and brewers, the Sculpin IPA is bright with aromas of apricot, peach, mango and lemon. Its lighter body also brings out the crispness of the hops. This delicious Ballast Point Ale took a Bronze Medal at the 2007 Great American Beer Festival in the Pro Am category.', 5558, 4.2, 'https://untappd.akamaized.net/site/beer_logos/beer-_5558_sm_568370b6ade3c2ed1ffd9a311fa92f.jpeg'),
 ('Becks', 'Brauerei Beck', 4.9, 'Our original Beck’s is a classic German lager beer with a distinctive full-bodied taste, fresh \"hoppy\" bouquet, golden color and full rich head. Adding to its complexity is a slightly fruity but firm crispness and a dry, clean finish.', 6870, 3.98, 'https://untappd.akamaized.net/site/beer_logos/beer-Becks_6870.jpeg'),
@@ -197,7 +212,7 @@ VALUES
 -- /* 30 venues, 50 items, 10 active and unactive for each venue */
 
 INSERT INTO draughts 
-(item_id, venue_id, active)
+(drink_id, place_id, active)
 VALUES
 (30,1,true),
 (52,1,false),
@@ -801,8 +816,8 @@ VALUES
 (51,30,false);
 
 
-INSERT INTO venue_owners
-(venue_id, user_id)
+INSERT INTO place_owners
+(place_id, user_id)
 VALUES
 (1, 1),
 (1, 2),
@@ -810,8 +825,8 @@ VALUES
 (3, 3);
 
 -- -- 5 per user
-INSERT INTO user_item_ratings
-(item_id, user_id, rating)
+INSERT INTO user_drink_ratings
+(drink_id, user_id, rating)
 VALUES
 (49,1,4),
 (60,1,1),
@@ -1115,8 +1130,8 @@ VALUES
 (40,30,4);
 
 -- -- 5 per user
-INSERT INTO user_venue_ratings
-(venue_id, user_id, rating)
+INSERT INTO user_place_ratings
+(place_id, user_id, rating)
 VALUES
 (28,1,5),
 (19,1,4),
